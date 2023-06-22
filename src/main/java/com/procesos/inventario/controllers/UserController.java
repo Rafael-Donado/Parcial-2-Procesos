@@ -1,7 +1,6 @@
 package com.procesos.inventario.controllers;
 
 import com.procesos.inventario.models.User;
-import com.procesos.inventario.services.UserService;
 import com.procesos.inventario.services.UserServiceImp;
 import com.procesos.inventario.utils.ApiResponse;
 import com.procesos.inventario.utils.Constants;
@@ -11,59 +10,62 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
     @Autowired
-    private UserService userService;
+    private UserServiceImp userService;
     private ApiResponse apiResponse;
-    Map data = new HashMap<>();
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity findUserById(@PathVariable Long id){
+    public ResponseEntity getById (@PathVariable(name = "id") Long id) {
+
         try{
-            apiResponse = new ApiResponse(Constants.REGISTER_FOUNT, userService.getUser(id));
+            apiResponse = new ApiResponse(Constants.REGISTER_FOUND,userService.getUserById(id));
             return new ResponseEntity(apiResponse, HttpStatus.OK);
-           }catch (Exception e){
-            apiResponse = new ApiResponse(Constants.REGISTER_NOT_FOUNT,"");
-            return new ResponseEntity<>(apiResponse,HttpStatus.NOT_FOUND);
+        }catch (Exception e){
+            apiResponse = new ApiResponse(Constants.REGISTER_NOT_FOUND, e.getMessage());
+            return new ResponseEntity(apiResponse, HttpStatus.BAD_REQUEST);
         }
     }
     @PostMapping(value = "")
-    public ResponseEntity saveUser(@RequestBody User user){
-        Boolean userRes = userService.createUser(user);
-        if(userRes == true){
-            apiResponse = new ApiResponse(Constants.REGISTER_CREATED, "");
+    public ResponseEntity createUser(@RequestBody User user){
+        try{
+            apiResponse = new ApiResponse(Constants.REGISTER_CREATED,userService.createUser(user));
             return new ResponseEntity(apiResponse, HttpStatus.CREATED);
+        }catch (Exception e){
+            apiResponse = new ApiResponse(Constants.REGISTER_NOT_CREATED, e.getMessage());
+            return new ResponseEntity(apiResponse, HttpStatus.BAD_REQUEST);
         }
-        apiResponse = new ApiResponse(Constants.REGISTER_BAD, user);
-        return new ResponseEntity(apiResponse, HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping(value = "")
-    public ResponseEntity findUsers() {
-        try {
-            apiResponse = new ApiResponse(Constants.REGISTER_LIST, userService.allUsers());
+    public ResponseEntity getAllUser (){
+        try{
+            List<User> userList = userService.allUser();
+            if (!userList.isEmpty()) {
+                apiResponse = new ApiResponse(Constants.REGISTERS_FOUND, userList);
+            } else {
+                apiResponse = new ApiResponse(Constants.REGISTERS_NOT_FOUND, null);
+            }
+            return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        }catch(Exception e){
+            apiResponse = new ApiResponse(Constants.REGISTERS_NOT_FOUND, e.getMessage());
+            return new ResponseEntity(apiResponse, HttpStatus.BAD_REQUEST);
+        }
+    }
+    @PutMapping  (value = "/{id}")
+    public ResponseEntity editUser (@PathVariable(name = "id") Long id,@RequestBody User user){
+        Map response= new HashMap();
+        try{
+            apiResponse = new ApiResponse(Constants.REGISTER_UPDATED, userService.updateUser(id, user));
             return new ResponseEntity(apiResponse, HttpStatus.OK);
         } catch (Exception e) {
-            apiResponse = new ApiResponse(Constants.REGISTER_NOT_FOUNT, "");
-            return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
+            apiResponse = new ApiResponse(Constants.REGISTER_NOT_UPDATED, e.getMessage());
+            return new ResponseEntity(apiResponse, HttpStatus.BAD_REQUEST);
         }
     }
-    @PutMapping (value = "/{id}")
-    public ResponseEntity updateUser(@PathVariable long id, @RequestBody User user){
-        Boolean userResp = userService.updateUser(id, user);
-        if (userResp){
-            apiResponse = new ApiResponse(Constants.ERROR_DATA, "");
-            return new ResponseEntity(apiResponse, HttpStatus.PAYMENT_REQUIRED);
-        }
-        apiResponse = new ApiResponse(Constants.REGISTER_UPDATE, "");
-        return new ResponseEntity(apiResponse, HttpStatus.CREATED);
-    }
-
 }
-

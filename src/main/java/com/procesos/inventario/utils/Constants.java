@@ -2,14 +2,16 @@ package com.procesos.inventario.utils;
 
 public class Constants {
     private Constants(){}
-    public static final String REGISTER_CREATED = "Registro creado";
-    public static final String REGISTER_BAD = "Hubo un error al crear el registro ";
-    public static final String REGISTER_NOT_FOUNT = "Registro no encontrado";
-    public static final String REGISTER_UPDATE = "Registro actualizado";
-    public static final String PASSWORD_INCORRECT = "La contraseña es incorrecta";
-    public static final String USER_NOT_FOUNT = "Usuario no encontrado";
-    public static final String USER_LOGIN = "Usuario logeado";
-    public static final String REGISTER_FOUNT = "Registro encontrado";
-    public static final String REGISTER_LIST = "Lista de registros";
-    public static final String ERROR_DATA = "Error en los datos enviados";
+    //Mensajes CRUD
+    public static final String REGISTER_FOUND = "Se encontró el registro solicitado!";
+    public static final String REGISTER_NOT_FOUND = "No Se encontró el registro solicitado!";
+    public static final String REGISTER_CREATED = "Se creó el registro!";
+    public static final String REGISTER_NOT_CREATED = "Hubo un error al crear el registro!";
+    public static final String REGISTERS_FOUND = "Se encontraron los registros solicitados!";
+    public static final String REGISTERS_NOT_FOUND = "No se encontraron los registros solicitados!";
+    public static final String REGISTER_UPDATED = "Se actualizó el registro!";
+    public static final String REGISTER_NOT_UPDATED = "Hubo un error al actualizar el registro!";
+    //Autenticacion
+    public static final String USER_LOGIN = "Usuario logeado!";
+    public static final String USER_NOT_FOUND = "Usuario no encontrado!";
 }

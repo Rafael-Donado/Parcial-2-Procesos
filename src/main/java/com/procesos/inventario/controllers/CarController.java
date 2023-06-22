@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.procesos.inventario.models.Car;
 import com.procesos.inventario.services.CarService;
 import com.procesos.inventario.utils.JWTUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,8 @@ public class CarController {
     @Autowired
     private JWTUtil jwtUtil;
 
-    @PostMapping("/cars/{id}")
+    @PostMapping ("/cars/{id}")
+    @Operation(summary = "",description  = "Crear")
     public Car createAllCars(@PathVariable Long id) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
         String carrosApi = restTemplate.getForObject("https://myfakeapi.com/api/cars/" + id, String.class);
@@ -35,7 +37,8 @@ public class CarController {
         return carroguardado;
     }
     @PostMapping(value = "/car")
-    public ResponseEntity createProduct(@RequestBody Car car, @RequestHeader(value="Authorization") String token){
+    @Operation(summary = "",description  = "Crear carro")
+    public ResponseEntity createProduct(@RequestBody Car car,  String token){
         Map response = new HashMap();
         try{
             if(!validateToken(token)){
@@ -52,7 +55,8 @@ public class CarController {
 
     }
     @GetMapping(value = "/cars")
-    public ResponseEntity getAll(@RequestHeader(value="Authorization") String token) {
+    @Operation(summary = "",description  = "Obtener")
+    public ResponseEntity getAll( String token) {
         Map response = new HashMap();
         try {
             if(!validateToken(token)){
@@ -71,7 +75,8 @@ public class CarController {
     }
 
     @GetMapping(value = "/cars/{id}")
-    public ResponseEntity getCar(@PathVariable(name = "id") Long id, @RequestHeader(value="Authorization") String token) {
+    @Operation(summary = "",description  = "Obtener carros")
+    public ResponseEntity getCar(@PathVariable(name = "id") Long id, String token) {
         Map response = new HashMap();
         try {
             if(!validateToken(token)){
@@ -88,7 +93,8 @@ public class CarController {
     }
 
     @PutMapping(value = "/cars/{id}")
-    public ResponseEntity updateCar(@PathVariable(name = "id") Long id, @RequestBody Car car, @RequestHeader(value="Authorization") String token) {
+    @Operation(summary = "",description  = "Actualizar carros")
+    public ResponseEntity updateCar(@PathVariable(name = "id") Long id, @RequestBody Car car, String token) {
         Map response = new HashMap();
         try {
             if(!validateToken(token)){
